@@ -18,7 +18,7 @@ const auth = new Auth();
 })
 class Analitics extends VuexModule {
   public isAuth = false;
-  public error: Error | null = null;
+  public error: string | null = null;
 
   @Mutation
   public setAuth(isAuth: boolean) {
@@ -26,7 +26,7 @@ class Analitics extends VuexModule {
   }
 
   @Mutation
-  public setError(error: Error) {
+  public setError(error: string | null) {
     this.error = error;
   }
 
@@ -39,29 +39,21 @@ class Analitics extends VuexModule {
 
         if (status === EStatus.ok) {
           this.setAuth(true);
+          this.setError(null);
           localStorage.setItem("leadhit-site-id", status);
         }
-
-        console.log(status, EStatus.ok);
-
-        console.log(
-          this.isAuth,
-          "isAuth",
-          localStorage.getItem("leadhit-site-id"),
-          "- localStorage"
-        );
       })
-      .catch((e) => {
-        if (e instanceof Error) {
-          this.setError(e);
-        } else {
-          console.error(e);
-        }
+      .catch(() => {
+        this.setError("Некорректный ID");
       });
   }
 
-  get getAuth() {
+  get getAuthOrLocalStorage() {
     return this.isAuth || !!localStorage.getItem("leadhit-site-id");
+  }
+
+  get getAuth() {
+    return this.isAuth;
   }
 }
 
