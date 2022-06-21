@@ -1,9 +1,9 @@
 <template>
-  <div class="home">
+  <v-container>
     <img alt="Vue logo" src="../assets/logo.png" />
     <the-graph v-if="analiticsData.length" :analiticsData="analiticsData" />
     <div>{{ analiticsData }} - data</div>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">

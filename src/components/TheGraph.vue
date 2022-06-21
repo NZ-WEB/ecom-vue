@@ -1,20 +1,20 @@
 <template>
-  <div id="chartdiv" class="hello" ref="chartdiv"></div>
+  <v-card class="pa-4">
+    <div id="chartdiv" class="hello"></div>
+  </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Prop } from "vue-property-decorator";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import { Theme as am5themes_Animated } from "@amcharts/amcharts5";
+import { Vue } from "vue-class-component";
+import { IAnaliticsResponse } from "@/types/analiticsResponse.interface";
 
-export default {
-  name: "TheGraph",
-  props: {
-    analiticsData: {
-      type: Array,
-      require: true,
-    },
-  },
+export default class extends Vue {
+  @Prop(Array) readonly analiticsData!: IAnaliticsResponse[];
+
   mounted() {
     const root = am5.Root.new("chartdiv");
 
@@ -47,35 +47,16 @@ export default {
     // Generate random data
     const date = new Date();
     date.setHours(0, 0, 0, 0);
-    let value = 100;
 
-    function generateData() {
-      value = Math.round(2 * 10 - 5 + value);
-      am5.time.add(date, "day", 1);
-      return {
-        date: date.getTime(),
-        value: value,
-      };
-    }
-
-    const formatDate = (date) => {
+    const formatDate = (date: string) => {
       const [year, month, day] = date.split("-");
-      console.log(year, "year");
-      return new Date(year, month, day).getTime();
+      return new Date(+year, +month, +day).getTime();
     };
 
-    const generateDatas = (count) => {
-      // this.analiticsData.forEach((item) => {
-      //   data.push(item.visits);
-      // });
-      console.log(this.analiticsData);
+    const generateDatas = () => {
       const data = this.analiticsData.map((item) => {
         return { date: formatDate(item.date), value: item.visits };
       });
-
-      // for (let i = 0; i < count; ++i) {
-      //   data.push(generateData());
-      // }
       console.log(data);
       return data;
     };
@@ -146,15 +127,15 @@ export default {
       })
     );
 
-    const data = generateDatas(10);
+    const data = generateDatas();
     series.data.setAll(data);
 
     // Make stuff animate on load
     // https://www.amcharts.com/docs/v5/concepts/animations/
     series.appear(1000);
     chart.appear(1000, 100);
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
