@@ -12,12 +12,15 @@ import { Theme as am5themes_Animated } from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import { Vue } from "vue-class-component";
 import { IAnaliticsResponse } from "@/types/analiticsResponse.interface";
+import am5locales_ru_RU from "@amcharts/amcharts5/locales/ru_RU";
 
 export default class extends Vue {
   @Prop(Array) readonly analiticsData!: IAnaliticsResponse[];
 
   mounted() {
     const root = am5.Root.new("chartdiv");
+
+    root.locale = am5locales_ru_RU;
 
     // Set themes
     // https://www.amcharts.com/docs/v5/concepts/themes/
@@ -51,10 +54,10 @@ export default class extends Vue {
 
     const formatDate = (date: string) => {
       const [year, month, day] = date.split("-");
-      return new Date(+year, +month, +day).getTime();
+      return new Date(+year, +month - 1, +day).getTime();
     };
 
-    const generateDatas = () => {
+    const generateDate = () => {
       return this.analiticsData.map((item) => {
         return { date: formatDate(item.date), value: item.visits };
       });
@@ -102,7 +105,7 @@ export default class extends Vue {
 
     series.fills.template.setAll({
       visible: true,
-      fillOpacity: 0.2,
+      fillOpacity: 0.5,
     });
 
     series.bullets.push(function () {
@@ -126,7 +129,7 @@ export default class extends Vue {
       })
     );
 
-    const data = generateDatas();
+    const data = generateDate();
     series.data.setAll(data);
 
     // Make stuff animate on load
