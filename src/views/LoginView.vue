@@ -1,8 +1,7 @@
 <template>
   <v-container>
-    <h1 class="my-4">LeadHit</h1>
-
-    <v-alert v-if="error" type="error" border="top"> {{ error }} </v-alert>
+    <app-page-title title="LeadHit" />
+    <app-error :error="error" />
 
     <v-card>
       <v-form tonal class="pa-4">
@@ -12,32 +11,29 @@
           counter="24"
           hint="Введите id сайта для доступа к аналитике"
           label="Id сайта"
-        ></v-text-field>
-        <v-btn :disabled="isDisabled" color="primary" @click="handleAuth"
-          >Войти</v-btn
-        >
+        />
+        <v-btn :disabled="isDisabled" color="primary" @click="handleAuth">
+          Войти
+        </v-btn>
       </v-form>
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Vue, Options } from "vue-class-component";
 import auth from "@/store/modules/auth";
+import AppError from "@/components/AppError.vue";
+import AppPageTitle from "@/components/AppPageTitle.vue";
 
+@Options({
+  components: { AppError, AppPageTitle },
+})
 export default class extends Vue {
   public rules = [
     (v: string) => v.length === 24 || "Id должен состоять из 24 символов",
   ];
   public id = "";
-
-  async handleAuth() {
-    await auth.auth(this.id);
-
-    if (auth.getAuth) {
-      this.$router.push("/");
-    }
-  }
 
   get isDisabled() {
     return typeof this.rules[0](this.id) === "string";
@@ -45,6 +41,14 @@ export default class extends Vue {
 
   get error() {
     return auth.error;
+  }
+
+  async handleAuth() {
+    await auth.auth(this.id);
+
+    if (auth.getAuth) {
+      this.$router.push("/");
+    }
   }
 }
 </script>

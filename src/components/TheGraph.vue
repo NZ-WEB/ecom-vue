@@ -1,5 +1,6 @@
 <template>
   <v-card class="pa-4">
+    <h2>Аналитика по визитам</h2>
     <div id="chartdiv" class="hello"></div>
   </v-card>
 </template>
@@ -7,8 +8,8 @@
 <script lang="ts">
 import { Prop } from "vue-property-decorator";
 import * as am5 from "@amcharts/amcharts5";
-import * as am5xy from "@amcharts/amcharts5/xy";
 import { Theme as am5themes_Animated } from "@amcharts/amcharts5";
+import * as am5xy from "@amcharts/amcharts5/xy";
 import { Vue } from "vue-class-component";
 import { IAnaliticsResponse } from "@/types/analiticsResponse.interface";
 
@@ -54,11 +55,9 @@ export default class extends Vue {
     };
 
     const generateDatas = () => {
-      const data = this.analiticsData.map((item) => {
+      return this.analiticsData.map((item) => {
         return { date: formatDate(item.date), value: item.visits };
       });
-      console.log(data);
-      return data;
     };
 
     // Create axes

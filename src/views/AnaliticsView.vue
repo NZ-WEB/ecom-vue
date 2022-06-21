@@ -1,8 +1,7 @@
 <template>
   <v-container>
-    <img alt="Vue logo" src="../assets/logo.png" />
+    <app-page-title title="Аналитика" />
     <the-graph v-if="analiticsData.length" :analiticsData="analiticsData" />
-    <div>{{ analiticsData }} - data</div>
   </v-container>
 </template>
 
@@ -12,9 +11,10 @@ import analitics from "@/store/modules/analitics";
 import { IAnaliticsResponse } from "@/types/analiticsResponse.interface";
 import auth from "@/store/modules/auth";
 import TheGraph from "@/components/TheGraph.vue";
+import AppPageTitle from "@/components/AppPageTitle.vue";
 
 @Options({
-  components: { TheGraph },
+  components: { TheGraph, AppPageTitle },
 })
 export default class extends Vue {
   public analiticsData: IAnaliticsResponse[] = [];
@@ -30,8 +30,10 @@ export default class extends Vue {
   }
 
   mounted() {
-    analitics.loadAnalitics();
-    this.analiticsData = analitics.getAnalitics;
+    if (this.isAuth) {
+      analitics.loadAnalitics();
+      this.analiticsData = analitics.getAnalitics;
+    }
   }
 }
 </script>
