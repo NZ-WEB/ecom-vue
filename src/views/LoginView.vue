@@ -15,6 +15,10 @@ export default class extends Vue {
 
   handleAuth() {
     auth.auth("5f8475902b0be670555f1bb3");
+
+    if (auth.getAuth) {
+      this.$router.push("/");
+    }
   }
 }
 </script>
