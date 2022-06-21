@@ -8,21 +8,18 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 import analitics from "@/store/modules/analitics";
 import { IAnaliticsResponse } from "@/types/analiticsResponse.interface";
 import auth from "@/store/modules/auth";
 
 @Options({
-  components: {
-    HelloWorld,
-  },
+  components: {},
 })
 export default class extends Vue {
   public analiticsData: IAnaliticsResponse[] = [];
 
   get isAuth() {
-    return auth.getAuth;
+    return auth.getAuthOrLocalStorage;
   }
 
   public created() {
